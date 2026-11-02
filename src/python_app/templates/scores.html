@@ -1,12 +1,210 @@
 {% extends "base.html" %}
 
 {% block title %}Scores — Villainous{% endblock %}
-{% block description %}Consultez les scores de vos parties de Villainous.{% endblock %}
+{% block description %}Enregistrez et consultez les résultats de vos duels Villainous.{% endblock %}
 {% block content %}
-  <section class="feature-page" aria-labelledby="page-title">
-    <p class="eyebrow"><span class="eyebrow-mark">♛</span> ARCHIVES DU ROYAUME</p>
-    <h1 id="page-title">Les <em>Scores.</em></h1>
-    <p class="intro">Le tableau des scores apparaîtra ici. Les exploits de chaque méchant seront bientôt réunis dans ces archives.</p>
-    <span class="feature-status"><span></span> FONCTIONNALITÉ EN PRÉPARATION</span>
+  <section class="scores-page" aria-labelledby="page-title">
+    <div class="scores-heading">
+      <div>
+        <p class="eyebrow"><span class="eyebrow-mark">♛</span> ARCHIVES DU ROYAUME</p>
+        <h1 id="page-title">Les <em>Scores.</em></h1>
+        <p class="intro">Consignez les duels de vos méchants et retrouvez leurs résultats dans les archives.</p>
+      </div>
+      <span class="scores-count">{{ games|length }} DUEL{% if games|length != 1 %}S{% endif %} ARCHIVÉ{% if games|length != 1 %}S{% endif %}</span>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-list" role="status">
+          {% for category, message in messages %}
+            <p class="flash flash-{{ category }}">{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% if errors %}
+      <div class="form-errors" role="alert">
+        <p>Le duel n’a pas pu être enregistré :</p>
+        <ul>
+          {% for error in errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <form class="score-form" method="post" action="{{ url_for('scores.create') }}">
+      <div class="form-heading">
+        <div>
+          <span class="form-kicker">NOUVELLE ENTRÉE</span>
+          <h2>Enregistrer un duel</h2>
+        </div>
+        <div class="game-meta">
+          <label class="date-field">
+            <span>Date du duel</span>
+            <input type="date" name="played_on" value="{{ played_on }}" required>
+          </label>
+          <label class="date-field duration-field">
+            <span>Durée</span>
+            <span class="duration-input">
+              <input type="number" name="duration_minutes" min="1" max="1440" step="1" inputmode="numeric" placeholder="60" value="{{ duration_minutes }}" required>
+              <span>min</span>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div class="duel-players">
+        {% for player in players %}
+          <fieldset class="duel-player">
+            <legend><span class="player-index">{{ "%02d"|format(loop.index) }}</span> Joueur {{ loop.index }}</legend>
+            <label class="player-field">
+              <span>Nom du joueur</span>
+              <input name="player_name" type="text" maxlength="80" placeholder="Nom du joueur" value="{{ player.name }}" autocomplete="off" required>
+            </label>
+            <label class="player-field">
+              <span>Personnage</span>
+              <select name="character" required>
+                <option value="">Choisir un personnage</option>
+                {% for character in characters %}
+                  <option value="{{ character }}"{% if player.character == character %} selected{% endif %}>{{ character }}</option>
+                {% endfor %}
+              </select>
+            </label>
+            <label class="player-field player-comment">
+              <span>Commentaire <small>(facultatif)</small></span>
+              <textarea name="comment" maxlength="1000" rows="2" placeholder="Un mot sur la partie de ce joueur…">{{ player.comment }}</textarea>
+            </label>
+          </fieldset>
+        {% endfor %}
+      </div>
+
+      <label class="player-field winner-field">
+        <span>Résultat du duel</span>
+        <select name="winner" required>
+          <option value="">Qui remporte le duel ?</option>
+          <option value="player1"{% if winner == "player1" %} selected{% endif %}>Joueur 1 gagne</option>
+          <option value="player2"{% if winner == "player2" %} selected{% endif %}>Joueur 2 gagne</option>
+          <option value="draw"{% if winner == "draw" %} selected{% endif %}>Égalité</option>
+        </select>
+      </label>
+
+      <div class="form-actions">
+        <span class="duel-hint"><span aria-hidden="true">✦</span> Un duel, deux destins.</span>
+        <button class="save-game" type="submit"><span aria-hidden="true">✦</span> Enregistrer le duel</button>
+      </div>
+    </form>
+
+    <section class="game-history" aria-labelledby="history-title">
+      <div class="history-heading">
+        <div>
+          <span class="form-kicker">LES CHRONIQUES DU ROYAUME</span>
+          <h2 id="history-title">Duels enregistrés</h2>
+        </div>
+        {% if games %}<span class="history-total">{{ games|length }} résultat{% if games|length != 1 %}s{% endif %}</span>{% endif %}
+      </div>
+
+      {% if games %}
+        <div class="game-list">
+          {% for game in games %}
+            <article class="game-card">
+              <header class="game-card-header">
+                <div class="game-time">
+                  <span class="game-date"><span aria-hidden="true">◷</span> {{ game.played_on.strftime("%d/%m/%Y") }}</span>
+                  <span class="time-separator" aria-hidden="true">•</span>
+                  <span class="game-duration">{% if game.duration_minutes %}{{ game.duration_minutes }} min{% else %}Durée inconnue{% endif %}</span>
+                </div>
+                <div class="game-card-actions">
+                  <span class="game-number">DUEL N° {{ "%03d"|format(game.id) }}</span>
+                  {% if edit_game_id == game.id %}
+                    <a class="record-action edit-action" href="{{ url_for('scores.index') }}" aria-label="Annuler la modification du duel {{ game.id }}" title="Annuler">↩</a>
+                  {% else %}
+                    <a class="record-action edit-action" href="{{ url_for('scores.edit', game_id=game.id) }}" aria-label="Modifier le duel {{ game.id }}" title="Modifier">✎</a>
+                  {% endif %}
+                  <form class="delete-game-form" method="post" action="{{ url_for('scores.remove', game_id=game.id) }}" onsubmit="return confirm('Supprimer définitivement ce duel ?');">
+                    <button class="record-action delete-action" type="submit" aria-label="Supprimer le duel {{ game.id }}" title="Supprimer">×</button>
+                  </form>
+                </div>
+              </header>
+              {% if edit_game_id == game.id %}
+                <form class="duel-edit-form" method="post" action="{{ url_for('scores.update', game_id=game.id) }}">
+                  <div class="game-meta edit-game-meta">
+                    <label class="date-field">
+                      <span>Date du duel</span>
+                      <input type="date" name="played_on" value="{{ edit_values.played_on }}" required>
+                    </label>
+                    <label class="date-field duration-field">
+                      <span>Durée</span>
+                      <span class="duration-input">
+                        <input type="number" name="duration_minutes" min="1" max="1440" step="1" inputmode="numeric" placeholder="60" value="{{ edit_values.duration_minutes }}" required>
+                        <span>min</span>
+                      </span>
+                    </label>
+                  </div>
+                  <div class="duel-players">
+                    {% for player in edit_values.players %}
+                      <fieldset class="duel-player">
+                        <legend><span class="player-index">{{ "%02d"|format(loop.index) }}</span> Joueur {{ loop.index }}</legend>
+                        <label class="player-field">
+                          <span>Nom du joueur</span>
+                          <input name="player_name" type="text" maxlength="80" value="{{ player.name }}" autocomplete="off" required>
+                        </label>
+                        <label class="player-field">
+                          <span>Personnage</span>
+                          <select name="character" required>
+                            <option value="">Choisir un personnage</option>
+                            {% for character in characters %}
+                              <option value="{{ character }}"{% if player.character == character %} selected{% endif %}>{{ character }}</option>
+                            {% endfor %}
+                          </select>
+                        </label>
+                        <label class="player-field player-comment">
+                          <span>Commentaire <small>(facultatif)</small></span>
+                          <textarea name="comment" maxlength="1000" rows="2" placeholder="Un mot sur la partie de ce joueur…">{{ player.comment }}</textarea>
+                        </label>
+                      </fieldset>
+                    {% endfor %}
+                  </div>
+                  <label class="player-field winner-field">
+                    <span>Résultat du duel</span>
+                    <select name="winner" required>
+                      <option value="player1"{% if edit_values.winner == "player1" %} selected{% endif %}>Joueur 1 gagne</option>
+                      <option value="player2"{% if edit_values.winner == "player2" %} selected{% endif %}>Joueur 2 gagne</option>
+                      <option value="draw"{% if edit_values.winner == "draw" %} selected{% endif %}>Égalité</option>
+                    </select>
+                  </label>
+                  <div class="edit-actions">
+                    <a class="cancel-edit" href="{{ url_for('scores.index') }}">Annuler</a>
+                    <button class="save-game" type="submit"><span aria-hidden="true">✦</span> Enregistrer les modifications</button>
+                  </div>
+                </form>
+              {% else %}
+                <div class="score-table-wrap">
+                  <table class="score-table">
+                    <thead>
+                      <tr><th scope="col">Résultat</th><th scope="col">Joueur</th><th scope="col">Personnage</th><th scope="col">Commentaire</th></tr>
+                    </thead>
+                    <tbody>
+                      {% for player in game.players %}
+                        <tr class="{% if player.result == 'win' %}winner-row{% elif player.result == 'draw' %}draw-row{% endif %}">
+                          <td class="result-cell result-{{ player.result }}">{% if player.result == "win" %}<span aria-hidden="true">♛</span> Victoire{% elif player.result == "draw" %}Égalité{% else %}Défaite{% endif %}</td>
+                          <td class="player-name-cell">{{ player.name }}</td>
+                          <td class="character-cell">{{ player.character }}</td>
+                          <td class="comment-cell">{% if player.comment %}{{ player.comment }}{% else %}<span class="no-comment">—</span>{% endif %}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-history">
+          <span aria-hidden="true">✧</span>
+          <p>Aucun duel dans les archives.<br><span>La première légende reste à écrire.</span></p>
+        </div>
+      {% endif %}
+    </section>
   </section>
 {% endblock %}
