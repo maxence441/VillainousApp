@@ -1,6 +1,6 @@
 # python-app
 
-A minimal Python command-line application packaged with a `src/` layout.
+A Python application with a command-line greeting and a Flask landing page.
 
 ## Requirements
 
@@ -22,19 +22,33 @@ python-app
 python-app Ada
 ```
 
-## Run with Docker
-
-Build the image from the repository root:
+## Run the web app
 
 ```sh
-docker build -t python-app .
+python-app-web
 ```
 
-Run the application with its default greeting or pass a name:
+Then open <http://127.0.0.1:5000>.
+
+## Run with Docker Compose
+
+Build the image and start the web app from the repository root:
 
 ```sh
-docker run --rm python-app
-docker run --rm python-app Ada
+docker compose up --build
+```
+
+Then open <http://127.0.0.1:5001>. If that port is already in use, choose another host port, for example `APP_PORT=5058 docker compose up --build`. Stop the app with `Ctrl+C`, or run it in the background:
+
+```sh
+docker compose up --build -d
+docker compose down
+```
+
+To run the CLI in the container instead:
+
+```sh
+docker compose run --rm --entrypoint python-app app Ada
 ```
 
 ## Test

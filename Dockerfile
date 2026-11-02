@@ -12,4 +12,6 @@ RUN python -m pip install --no-cache-dir .
 
 USER 10001:10001
 
-ENTRYPOINT ["python-app"]
+EXPOSE 5000
+
+ENTRYPOINT ["python-app-web"]
