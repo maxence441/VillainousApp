@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+build/
+dist/
+.DS_Store
+
+# Local editor and IDE settings
+.vscode/
+.idea/
+.fleet/
+.history/
+*.sublime-workspace
+
+# Machine-specific environment files
+.env
+.env.*
+!.env.example
