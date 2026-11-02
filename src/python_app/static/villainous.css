@@ -90,6 +90,7 @@ a {
 }
 
 .nav-button {
+  text-decoration: none;
   display: inline-flex;
   min-height: 42px;
   align-items: center;
@@ -101,14 +102,27 @@ a {
   color: #ded7ce;
   font: 500 12px "DM Sans", sans-serif;
   letter-spacing: .02em;
-  cursor: not-allowed;
-  opacity: .85;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.nav-button:hover,
+.nav-button-active {
+  border-color: rgb(215 186 130 / 65%);
+  background: rgb(215 186 130 / 9%);
+  box-shadow: 0 0 18px rgb(215 186 130 / 9%);
 }
 
 .nav-button-primary {
   border-color: rgb(215 186 130 / 47%);
   background: linear-gradient(130deg, rgb(215 186 130 / 13%), rgb(173 139 228 / 8%));
   box-shadow: 0 0 22px rgb(215 186 130 / 7%), inset 0 0 15px rgb(215 186 130 / 4%);
+}
+
+.nav-button-primary:hover,
+.nav-button-primary.nav-button-active {
+  background: linear-gradient(130deg, rgb(215 186 130 / 22%), rgb(173 139 228 / 13%));
+  box-shadow: 0 0 25px rgb(215 186 130 / 15%), inset 0 0 15px rgb(215 186 130 / 7%);
 }
 
 .nav-icon {
@@ -595,6 +609,42 @@ h1 em {
   animation: mark-turn 18s linear infinite;
 }
 
+.feature-page {
+  min-height: min(790px, calc(100svh - 88px));
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  padding: 80px 8%;
+  background: radial-gradient(ellipse at 75% 48%, rgb(91 53 123 / 15%), transparent 48%);
+}
+
+.feature-page h1 {
+  max-width: 900px;
+}
+
+.feature-page .intro {
+  max-width: 550px;
+}
+
+.feature-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 37px;
+  color: #b4aab7;
+  font: 9px var(--mono);
+  letter-spacing: .13em;
+}
+
+.feature-status span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 10px var(--gold);
+}
+
 @keyframes box-float {
   0%, 100% { transform: translateY(0) rotateZ(-1deg); }
   50% { transform: translateY(-12px) rotateZ(1deg); }
@@ -623,6 +673,11 @@ h1 em {
   .hero {
     min-height: 790px;
   }
+}
+
+.feature-page {
+  min-height: calc(100svh - 72px);
+  padding: 65px 3px;
 }
 
 @media (max-width: 760px) {

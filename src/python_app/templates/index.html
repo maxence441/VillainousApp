@@ -1,38 +1,8 @@
-<!doctype html>
-<html lang="fr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#100d16">
-    <meta name="description" content="Entrez dans l'univers de Villainous. Qui sera le plus grand méchant ?">
-    <title>Villainous — À vous de jouer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='villainous.css') }}">
-  </head>
-  <body>
-    <div class="page-shell">
-      <header class="topbar">
-        <a class="brand" href="#" aria-label="Villainous, accueil">
-          <span class="brand-mark" aria-hidden="true">V</span>
-          <span>VILLAINOUS</span>
-        </a>
-        <nav class="navigation" aria-label="Navigation principale">
-          <button class="nav-button" type="button" disabled>
-            <span class="nav-icon" aria-hidden="true">♛</span>
-            Scores
-            <span class="nav-soon">Bientôt</span>
-          </button>
-          <button class="nav-button nav-button-primary" type="button" disabled>
-            <span class="nav-icon" aria-hidden="true">✦</span>
-            Lanceur
-            <span class="nav-soon">Bientôt</span>
-          </button>
-        </nav>
-      </header>
+{% extends "base.html" %}
 
-      <main>
+{% block title %}Villainous — À vous de jouer{% endblock %}
+{% block description %}Entrez dans l'univers de Villainous. Qui sera le plus grand méchant ?{% endblock %}
+{% block content %}
         <section class="hero" aria-labelledby="hero-title">
           <div class="hero-copy">
             <p class="eyebrow"><span class="eyebrow-mark">✦</span> LE DESTIN DES MÉCHANTS EST ENTRE VOS MAINS</p>
@@ -110,7 +80,4 @@
           <p>Le pouvoir ne se donne pas.<br><span>Il se conquiert, un tour après l’autre.</span></p>
           <span class="signal-mark" aria-hidden="true">✦</span>
         </section>
-      </main>
-    </div>
-  </body>
-</html>
+{% endblock %}

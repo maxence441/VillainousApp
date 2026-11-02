@@ -30,6 +30,8 @@ python-app-web
 
 Then open <http://127.0.0.1:5000>.
 
+The home page is at `/`, with the feature pages at `/scores` and `/personnages`.
+
 ## Run with Docker Compose
 
 Build the image and start the web app from the repository root:
@@ -38,7 +40,7 @@ Build the image and start the web app from the repository root:
 docker compose up --build
 ```
 
-Then open <http://127.0.0.1:5001>. If that port is already in use, choose another host port, for example `APP_PORT=5058 docker compose up --build`. Stop the app with `Ctrl+C`, or run it in the background:
+Then open <http://127.0.0.1:5001>. The pages are available at `/`, `/scores`, and `/personnages`. If that port is already in use, choose another host port, for example `APP_PORT=5058 docker compose up --build`. Stop the app with `Ctrl+C`, or run it in the background:
 
 ```sh
 docker compose up --build -d

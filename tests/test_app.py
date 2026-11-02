@@ -10,7 +10,25 @@ def test_homepage_renders_three_dimensional_game_box_and_navigation() -> None:
     assert "VILLAINOUS" in page
     assert 'class="game-box"' in page
     assert "Scores" in page
-    assert "Lanceur" in page
+    assert "Personnages" in page
+    assert 'href="/scores"' in page
+    assert 'href="/personnages"' in page
+
+
+def test_scores_route_is_served_by_its_blueprint() -> None:
+    response = create_app().test_client().get("/scores")
+
+    assert response.status_code == 200
+    assert "tableau des scores" in response.get_data(as_text=True)
+    assert 'aria-current="page"' in response.get_data(as_text=True)
+
+
+def test_characters_route_is_served_by_its_blueprint() -> None:
+    response = create_app().test_client().get("/personnages")
+
+    assert response.status_code == 200
+    assert "galerie des personnages" in response.get_data(as_text=True)
+    assert 'aria-current="page"' in response.get_data(as_text=True)
 
 
 def test_homepage_stylesheet_has_box_animation() -> None:
