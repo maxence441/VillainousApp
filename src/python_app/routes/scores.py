@@ -50,6 +50,7 @@ DEFAULT_PLAYERS = [
     {"name": "", "character": "", "comment": ""},
     {"name": "", "character": "", "comment": ""},
 ]
+GAMES_PER_PAGE = 3
 
 
 def _render_scores(
@@ -63,13 +64,32 @@ def _render_scores(
     edit_game_id: Optional[int] = None,
     edit_values: Optional[dict[str, Any]] = None,
 ) -> tuple[str, int]:
-    games = list_games(current_app.config["DATABASE_URL"])
+    all_games = list_games(current_app.config["DATABASE_URL"])
+    total_games = len(all_games)
+    page_count = max(1, (total_games + GAMES_PER_PAGE - 1) // GAMES_PER_PAGE)
+    page = request.args.get("page", 1, type=int) or 1
+    if edit_game_id is not None:
+        edit_index = next(
+            (index for index, game in enumerate(all_games) if game["id"] == edit_game_id),
+            None,
+        )
+        if edit_index is not None:
+            page = edit_index // GAMES_PER_PAGE + 1
+    page = min(max(page, 1), page_count)
+    start = (page - 1) * GAMES_PER_PAGE
+    games = all_games[start : start + GAMES_PER_PAGE]
+    page_numbers = range(max(1, page - 2), min(page_count, page + 2) + 1)
+
     return (
         render_template(
             "scores.html",
             characters=CHARACTERS,
             errors=errors or [],
             games=games,
+            total_games=total_games,
+            current_page=page,
+            page_count=page_count,
+            page_numbers=page_numbers,
             played_on=played_on or date.today().isoformat(),
             duration_minutes=duration_minutes or "",
             players=players or DEFAULT_PLAYERS,
@@ -126,6 +146,12 @@ def _parse_duel_form() -> tuple[Optional[dict[str, Any]], list[str], dict[str, A
             errors.append(
                 f"Le commentaire du joueur {index} ne peut pas dépasser 1 000 caractères."
             )
+
+    if (
+        rows[0]["character"]
+        and rows[0]["character"] == rows[1]["character"]
+    ):
+        errors.append("Les deux joueurs doivent choisir des personnages différents.")
 
     form_values = {
         "played_on": raw_date,
@@ -234,5 +260,16 @@ def update(game_id: int) -> Any:
 def remove(game_id: int) -> Any:
     if not delete_game(current_app.config["DATABASE_URL"], game_id):
         abort(404)
+    remaining_games = list_games(current_app.config["DATABASE_URL"])
+    page_count = max(
+        1, (len(remaining_games) + GAMES_PER_PAGE - 1) // GAMES_PER_PAGE
+    )
+    page = min(max(request.args.get("page", 1, type=int) or 1, 1), page_count)
     flash("Le duel a été supprimé.", "success")
-    return redirect(url_for("scores.index"))
+    return redirect(
+        url_for(
+            "scores.index",
+            page=page if page > 1 else None,
+            _anchor="history-title",
+        )
+    )
