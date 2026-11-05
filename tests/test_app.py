@@ -4,6 +4,9 @@ import pytest
 
 from python_app import greet
 from python_app.database import save_game
+from python_app.routes.characters import VILLAIN_CARDS
+from python_app.routes.scores import CHARACTERS
+from python_app.routes.stats import _build_statistics
 from python_app.web import create_app
 
 
@@ -15,12 +18,96 @@ def test_homepage_renders_three_dimensional_game_box_and_navigation() -> None:
     assert "VILLAINOUS" in page
     assert 'class="game-box"' in page
     assert "Scores" in page
+    assert "Stats" in page
     assert "Personnages" in page
     assert 'href="/scores"' in page
+    assert 'href="/stats"' in page
     assert 'href="/personnages"' in page
     assert 'href="/static/villainous.css"' in page
     assert 'href="/static/home.css"' in page
     assert 'href="/static/scores.css"' not in page
+
+
+def test_stats_route_summarizes_recorded_games(monkeypatch) -> None:
+    games = [
+        {
+            "id": 3,
+            "played_on": date(2026, 11, 3),
+            "duration_minutes": 60,
+            "players": [
+                {"name": "Alice", "character": "Maléfique", "result": "win"},
+                {"name": "Bob", "character": "Jafar", "result": "loss"},
+            ],
+        },
+        {
+            "id": 2,
+            "played_on": date(2026, 11, 2),
+            "duration_minutes": 90,
+            "players": [
+                {"name": "Alice", "character": "Jafar", "result": "draw"},
+                {"name": "Bob", "character": "Maléfique", "result": "draw"},
+            ],
+        },
+        {
+            "id": 1,
+            "played_on": date(2026, 10, 31),
+            "duration_minutes": 30,
+            "players": [
+                {"name": "Alice", "character": "Maléfique", "result": "win"},
+                {"name": "Chloé", "character": "Ursula", "result": "loss"},
+            ],
+        },
+    ]
+    monkeypatch.setattr("python_app.routes.stats.list_games", lambda database_url: games)
+    stats = _build_statistics(games)
+
+    response = create_app({"DATABASE_URL": "postgresql://test"}).test_client().get(
+        "/stats"
+    )
+    page = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert "Statistiques" in page
+    assert "DUELS ARCHIVÉS" in page
+    assert ">3<" in page
+    assert "JOUEURS FIXES" not in page
+    assert "ÉGALITÉS" in page
+    assert "ÉCART AU SCORE" in page
+    assert ">90 min<" in page
+    assert "Maléfique" in page
+    assert "Claire" in page
+    assert "Maxence" in page
+    assert "Alice" not in page
+    assert "Face-à-face" in page
+    assert "Personnage favori" in page
+    assert "Taux d’égalité" in page
+    assert "Parties nulles" in page
+    assert "Novembre 2026" in page
+    assert 'href="/static/stats.css"' in page
+    assert 'aria-current="page"' in page
+    assert stats["draws"] == 1
+    assert stats["draw_rate"] == 33
+    assert stats["decisive_games"] == 2
+    assert stats["leader"] == "Claire"
+    assert stats["win_margin"] == 2
+    assert stats["average_draw_duration"] == 90
+    assert stats["average_decisive_duration"] == 45
+    assert stats["top_draw_character_pairings"] == [
+        {"names": ("Jafar", "Maléfique"), "games": 1}
+    ]
+
+
+def test_stats_route_shows_empty_state_without_games(monkeypatch) -> None:
+    monkeypatch.setattr("python_app.routes.stats.list_games", lambda database_url: [])
+
+    response = create_app({"DATABASE_URL": "postgresql://test"}).test_client().get(
+        "/stats"
+    )
+    page = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert "Les chroniques sont encore vierges." in page
+    assert 'href="/scores"' in page
 
 
 def test_scores_route_displays_game_entry_form(monkeypatch) -> None:
@@ -35,7 +122,9 @@ def test_scores_route_displays_game_entry_form(monkeypatch) -> None:
     assert 'href="/static/villainous.css"' in page
     assert 'href="/static/scores.css"' in page
     assert 'href="/static/home.css"' not in page
-    assert 'name="player_name"' in page
+    assert "Claire" in page
+    assert "Maxence" in page
+    assert "Nom du joueur" not in page
     assert page.count('class="character-picker-toggle"') == 2
     assert page.count('class="character-filter" type="search"') == 2
     assert page.count('class="character-picker-option" type="button" role="option"') == 54
@@ -45,7 +134,9 @@ def test_scores_route_displays_game_entry_form(monkeypatch) -> None:
     assert 'name="duration_minutes"' in page
     assert 'name="comment"' in page
     assert 'name="winner"' in page
-    assert page.count('name="player_name"') == 2
+    assert 'name="player_name"' not in page
+    assert "Claire gagne" in page
+    assert "Maxence gagne" in page
     assert "Maléfique" in page
     assert 'aria-current="page"' in response.get_data(as_text=True)
 
@@ -123,13 +214,13 @@ def test_scores_route_saves_duel_winner_duration_and_comments(monkeypatch) -> No
             75,
             [
                 {
-                    "name": "Alice",
+                    "name": "Claire",
                     "character": "Maléfique",
                     "result": "win",
                     "comment": "Belle stratégie",
                 },
                 {
-                    "name": "Bob",
+                    "name": "Maxence",
                     "character": "Jafar",
                     "result": "loss",
                     "comment": "Presque !",
@@ -155,7 +246,6 @@ def test_scores_route_saves_a_draw(monkeypatch) -> None:
         data={
             "played_on": "2026-11-02",
             "duration_minutes": "60",
-            "player_name": ["Alice", "Bob"],
             "character": ["Maléfique", "Jafar"],
             "comment": ["", ""],
             "winner": "draw",
@@ -165,8 +255,8 @@ def test_scores_route_saves_a_draw(monkeypatch) -> None:
     assert response.status_code == 302
     assert saved_games == [
         [
-            {"name": "Alice", "character": "Maléfique", "result": "draw", "comment": ""},
-            {"name": "Bob", "character": "Jafar", "result": "draw", "comment": ""},
+            {"name": "Claire", "character": "Maléfique", "result": "draw", "comment": ""},
+            {"name": "Maxence", "character": "Jafar", "result": "draw", "comment": ""},
         ]
     ]
 
@@ -185,7 +275,6 @@ def test_scores_route_rejects_the_same_character_for_both_players(monkeypatch) -
         data={
             "played_on": "2026-11-02",
             "duration_minutes": "60",
-            "player_name": ["Alice", "Bob"],
             "character": ["Maléfique", "Maléfique"],
             "comment": ["", ""],
             "winner": "player1",
@@ -235,6 +324,9 @@ def test_scores_route_displays_duel_duration_and_comments(monkeypatch) -> None:
     assert "Victoire" in page
     assert "Défaite" in page
     assert "Victoire mémorable" in page
+    assert "Claire" in page
+    assert "Maxence" in page
+    assert "Alice" not in page
     assert 'class="winner-row"' in page
     assert 'class="loss-row"' in page
     assert 'class="result-badge result-win"' in page
@@ -277,7 +369,9 @@ def test_scores_route_opens_prefilled_edit_form(monkeypatch) -> None:
     assert 'id="game-card-12"' in page
     assert 'data-tooltip="Annuler la modification"' in page
     assert 'action="/scores/12/edit"' in page
-    assert 'value="Alice"' in page
+    assert "Claire" in page
+    assert "Maxence" in page
+    assert "Alice" not in page
     assert 'value="45"' in page
     assert "À améliorer" in page
     assert '<option value="player2" selected>' in page
@@ -308,7 +402,6 @@ def test_scores_route_updates_only_the_selected_duel(monkeypatch) -> None:
         data={
             "played_on": "2026-11-03",
             "duration_minutes": "70",
-            "player_name": ["Alice", "Bob"],
             "character": ["Maléfique", "Jafar"],
             "comment": ["", "Revanche"],
             "winner": "draw",
@@ -324,13 +417,13 @@ def test_scores_route_updates_only_the_selected_duel(monkeypatch) -> None:
             70,
             [
                 {
-                    "name": "Alice",
+                    "name": "Claire",
                     "character": "Maléfique",
                     "result": "draw",
                     "comment": "",
                 },
                 {
-                    "name": "Bob",
+                    "name": "Maxence",
                     "character": "Jafar",
                     "result": "draw",
                     "comment": "Revanche",
@@ -361,7 +454,6 @@ def test_scores_route_rejects_duplicate_characters_when_updating_a_duel(monkeypa
         data={
             "played_on": "2026-11-03",
             "duration_minutes": "70",
-            "player_name": ["Alice", "Bob"],
             "character": ["Jafar", "Jafar"],
             "comment": ["", ""],
             "winner": "player1",
@@ -451,7 +543,6 @@ def test_scores_route_rejects_games_with_one_player(monkeypatch) -> None:
         data={
             "played_on": "2026-11-02",
             "duration_minutes": "60",
-            "player_name": ["Alice"],
             "character": ["Maléfique"],
             "comment": [""],
             "winner": "player1",
@@ -471,7 +562,6 @@ def test_scores_route_rejects_invalid_duration(monkeypatch) -> None:
         data={
             "played_on": "2026-11-02",
             "duration_minutes": "0",
-            "player_name": ["Alice", "Bob"],
             "character": ["Maléfique", "Jafar"],
             "comment": ["", ""],
             "winner": "player1",
@@ -491,7 +581,6 @@ def test_scores_route_rejects_character_outside_the_list(monkeypatch) -> None:
         data={
             "played_on": "2026-11-02",
             "duration_minutes": "60",
-            "player_name": ["Alice", "Bob"],
             "character": ["Maléfique", "Personnage inventé"],
             "comment": ["", ""],
             "winner": "player1",
@@ -509,9 +598,29 @@ def test_characters_route_is_served_by_its_blueprint() -> None:
 
     assert response.status_code == 200
     page = response.get_data(as_text=True)
-    assert "galerie des personnages" in page
+    assert "Les <em>Personnages.</em>" in page
+    assert page.count('class="villain-card"') == len(CHARACTERS)
+    assert page.count("<details class=\"villain-card\"") == len(CHARACTERS)
+    assert page.count('class="villain-details"') == len(CHARACTERS)
+    assert 'class="villain-sigil"' not in page
+    assert len(VILLAIN_CARDS) == len(CHARACTERS)
+    assert {villain["name"] for villain in VILLAIN_CARDS} == set(CHARACTERS)
+    assert "APPROCHE DE JEU" in page
+    assert "Axes de jeu" in page
+    assert "Maléfique" in page
+    assert "Sœurs Sanderson" in page
+    assert "FONCTIONNALITÉ EN PRÉPARATION" not in page
+    assert "Catalogue officiel Ravensburger" in page
+    assert "Développer la fiche" in page
+    assert "Lecture stratégique" in page
+    assert "Conseil de pilotage" in page
+    assert all(villain["advice"] in page for villain in VILLAIN_CARDS)
+    assert "Objectif, cartes et plateau" in page
+    assert "notice de la boîte correspondante" in page
+    assert "character-search" in page
     assert 'aria-current="page"' in page
     assert 'href="/static/villainous.css"' in page
+    assert 'href="/static/characters.css"' in page
     assert 'href="/static/home.css"' not in page
     assert 'href="/static/scores.css"' not in page
 
@@ -521,11 +630,19 @@ def test_homepage_stylesheet_has_box_animation() -> None:
     common = client.get("/static/villainous.css")
     home = client.get("/static/home.css")
     scores = client.get("/static/scores.css")
+    characters = client.get("/static/characters.css")
 
-    assert common.status_code == home.status_code == scores.status_code == 200
+    assert (
+        common.status_code
+        == home.status_code
+        == scores.status_code
+        == characters.status_code
+        == 200
+    )
     common_css = common.get_data(as_text=True)
     home_css = home.get_data(as_text=True)
     scores_css = scores.get_data(as_text=True)
+    characters_css = characters.get_data(as_text=True)
     assert "--gold:" in common_css
     assert ".nav-button" in common_css
     assert ".feature-page" in common_css
@@ -537,6 +654,9 @@ def test_homepage_stylesheet_has_box_animation() -> None:
     assert ".scores-page {" in scores_css
     assert ".game-card {" in scores_css
     assert ".hero {" not in scores_css
+    assert ".character-catalog {" in characters_css
+    assert "align-items: start;" in characters_css
+    assert ".villain-card {" in characters_css
 
 
 def test_greet_uses_the_supplied_name() -> None:

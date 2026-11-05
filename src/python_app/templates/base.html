@@ -14,6 +14,10 @@
       <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
     {% elif request.blueprint == "scores" %}
       <link rel="stylesheet" href="{{ url_for('static', filename='scores.css') }}">
+    {% elif request.blueprint == "stats" %}
+      <link rel="stylesheet" href="{{ url_for('static', filename='stats.css') }}">
+    {% elif request.blueprint == "characters" %}
+      <link rel="stylesheet" href="{{ url_for('static', filename='characters.css') }}">
     {% endif %}
   </head>
   <body>
@@ -27,6 +31,10 @@
           <a class="nav-button{% if request.blueprint == 'scores' %} nav-button-active{% endif %}" href="{{ url_for('scores.index') }}"{% if request.blueprint == 'scores' %} aria-current="page"{% endif %}>
             <span class="nav-icon" aria-hidden="true">♛</span>
             Scores
+          </a>
+          <a class="nav-button{% if request.blueprint == 'stats' %} nav-button-active{% endif %}" href="{{ url_for('stats.index') }}"{% if request.blueprint == 'stats' %} aria-current="page"{% endif %}>
+            <span class="nav-icon" aria-hidden="true">▤</span>
+            Stats
           </a>
           <a class="nav-button nav-button-primary{% if request.blueprint == 'characters' %} nav-button-active{% endif %}" href="{{ url_for('characters.index') }}"{% if request.blueprint == 'characters' %} aria-current="page"{% endif %}>
             <span class="nav-icon" aria-hidden="true">✦</span>

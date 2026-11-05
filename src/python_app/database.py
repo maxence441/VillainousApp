@@ -4,6 +4,8 @@ from typing import Any, Optional
 import psycopg
 from psycopg.rows import dict_row
 
+PLAYER_NAMES = ("Claire", "Maxence")
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS games (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -148,7 +150,6 @@ def list_games(database_url: str) -> list[dict[str, Any]]:
             games.id AS game_id,
             games.played_on,
             games.duration_minutes,
-            game_players.player_name,
             game_players.character_name,
             game_players.result,
             game_players.comment,
@@ -174,7 +175,7 @@ def list_games(database_url: str) -> list[dict[str, Any]]:
         )
         game["players"].append(
             {
-                "name": row["player_name"],
+                "name": PLAYER_NAMES[row["seat"] - 1],
                 "character": row["character_name"],
                 "result": row["result"],
                 "comment": row["comment"],
@@ -235,7 +236,7 @@ def update_game(
                 WHERE game_id = %s AND seat = %s
                 """,
                 (
-                    player["name"],
+                    PLAYER_NAMES[seat - 1],
                     player["character"],
                     player["result"],
                     player["comment"],
@@ -296,7 +297,7 @@ def save_game(
                     (
                         game_id,
                         seat,
-                        player["name"],
+                        PLAYER_NAMES[seat - 1],
                         player["character"],
                         player["result"],
                         player["comment"],

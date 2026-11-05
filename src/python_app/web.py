@@ -8,6 +8,7 @@ from python_app.database import initialize_database
 from python_app.routes.characters import characters
 from python_app.routes.home import home
 from python_app.routes.scores import scores
+from python_app.routes.stats import stats
 
 
 def create_app(config: Optional[Mapping[str, object]] = None) -> Flask:
@@ -19,6 +20,7 @@ def create_app(config: Optional[Mapping[str, object]] = None) -> Flask:
     app.config.update(config or {})
     app.register_blueprint(home)
     app.register_blueprint(scores)
+    app.register_blueprint(stats)
     app.register_blueprint(characters)
     return app
 

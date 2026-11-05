@@ -56,26 +56,22 @@
       <div class="duel-players">
         {% for player in players %}
           <fieldset class="duel-player">
-            <legend><span class="player-index">{{ "%02d"|format(loop.index) }}</span> Joueur {{ loop.index }}</legend>
-            <label class="player-field">
-              <span>Nom du joueur</span>
-              <input name="player_name" type="text" maxlength="80" placeholder="Nom du joueur" value="{{ player.name }}" autocomplete="off" required>
-            </label>
+            <legend><span class="player-index">{{ "%02d"|format(loop.index) }}</span> {{ player.name }}</legend>
             <div class="player-field character-field">
               <span>Personnage</span>
               <div class="character-picker">
-                <select class="character-native-select" name="character" aria-label="Personnage du joueur {{ loop.index }}" required>
+                <select class="character-native-select" name="character" aria-label="Personnage de {{ player.name }}" required>
                 <option value="">Choisir un personnage</option>
                 {% for character in characters %}
                   <option value="{{ character }}"{% if player.character == character %} selected{% endif %}>{{ character }}</option>
                 {% endfor %}
                 </select>
-                <button class="character-picker-toggle" type="button" role="combobox" aria-haspopup="listbox" aria-controls="character-options-new-{{ loop.index }}" aria-expanded="false" aria-required="true" aria-label="Personnage du joueur {{ loop.index }}" hidden>
+                <button class="character-picker-toggle" type="button" role="combobox" aria-haspopup="listbox" aria-controls="character-options-new-{{ loop.index }}" aria-expanded="false" aria-required="true" aria-label="Personnage de {{ player.name }}" hidden>
                   <span class="character-picker-value"></span>
                   <span class="character-picker-arrow" aria-hidden="true">⌄</span>
                 </button>
                 <div class="character-picker-menu" hidden>
-                  <input class="character-filter" type="search" placeholder="Filtrer les personnages…" aria-label="Filtrer les personnages du joueur {{ loop.index }}" autocomplete="off">
+                  <input class="character-filter" type="search" placeholder="Filtrer les personnages…" aria-label="Filtrer les personnages de {{ player.name }}" autocomplete="off">
                   <div class="character-picker-options" id="character-options-new-{{ loop.index }}" role="listbox">
                     {% for character in characters %}
                       <button class="character-picker-option" type="button" role="option" aria-selected="{{ 'true' if player.character == character else 'false' }}" data-value="{{ character }}">{{ character }}</button>
@@ -87,7 +83,7 @@
             </div>
             <label class="player-field player-comment">
               <span>Commentaire <small>(facultatif)</small></span>
-              <textarea name="comment" maxlength="1000" rows="2" placeholder="Un mot sur la partie de ce joueur…">{{ player.comment }}</textarea>
+              <textarea name="comment" maxlength="1000" rows="2" placeholder="Un mot sur la partie de {{ player.name }}…">{{ player.comment }}</textarea>
             </label>
           </fieldset>
         {% endfor %}
@@ -97,8 +93,8 @@
         <span>Résultat du duel</span>
         <select name="winner" required>
           <option value="">Qui remporte le duel ?</option>
-          <option value="player1"{% if winner == "player1" %} selected{% endif %}>Joueur 1 gagne</option>
-          <option value="player2"{% if winner == "player2" %} selected{% endif %}>Joueur 2 gagne</option>
+          <option value="player1"{% if winner == "player1" %} selected{% endif %}>Claire gagne</option>
+          <option value="player2"{% if winner == "player2" %} selected{% endif %}>Maxence gagne</option>
           <option value="draw"{% if winner == "draw" %} selected{% endif %}>Égalité</option>
         </select>
       </label>
@@ -158,26 +154,22 @@
                   <div class="duel-players">
                     {% for player in edit_values.players %}
                       <fieldset class="duel-player">
-                        <legend><span class="player-index">{{ "%02d"|format(loop.index) }}</span> Joueur {{ loop.index }}</legend>
-                        <label class="player-field">
-                          <span>Nom du joueur</span>
-                          <input name="player_name" type="text" maxlength="80" value="{{ player.name }}" autocomplete="off" required>
-                        </label>
+                        <legend><span class="player-index">{{ "%02d"|format(loop.index) }}</span> {{ player.name }}</legend>
                         <div class="player-field character-field">
                           <span>Personnage</span>
                           <div class="character-picker">
-                            <select class="character-native-select" name="character" aria-label="Personnage du joueur {{ loop.index }}" required>
+                            <select class="character-native-select" name="character" aria-label="Personnage de {{ player.name }}" required>
                               <option value="">Choisir un personnage</option>
                               {% for character in characters %}
                                 <option value="{{ character }}"{% if player.character == character %} selected{% endif %}>{{ character }}</option>
                               {% endfor %}
                             </select>
-                            <button class="character-picker-toggle" type="button" role="combobox" aria-haspopup="listbox" aria-controls="character-options-{{ game.id }}-{{ loop.index }}" aria-expanded="false" aria-required="true" aria-label="Personnage du joueur {{ loop.index }}" hidden>
+                            <button class="character-picker-toggle" type="button" role="combobox" aria-haspopup="listbox" aria-controls="character-options-{{ game.id }}-{{ loop.index }}" aria-expanded="false" aria-required="true" aria-label="Personnage de {{ player.name }}" hidden>
                               <span class="character-picker-value"></span>
                               <span class="character-picker-arrow" aria-hidden="true">⌄</span>
                             </button>
                             <div class="character-picker-menu" hidden>
-                              <input class="character-filter" type="search" placeholder="Filtrer les personnages…" aria-label="Filtrer les personnages du joueur {{ loop.index }}" autocomplete="off">
+                              <input class="character-filter" type="search" placeholder="Filtrer les personnages…" aria-label="Filtrer les personnages de {{ player.name }}" autocomplete="off">
                               <div class="character-picker-options" id="character-options-{{ game.id }}-{{ loop.index }}" role="listbox">
                                 {% for character in characters %}
                                   <button class="character-picker-option" type="button" role="option" aria-selected="{{ 'true' if player.character == character else 'false' }}" data-value="{{ character }}">{{ character }}</button>
@@ -189,7 +181,7 @@
                         </div>
                         <label class="player-field player-comment">
                           <span>Commentaire <small>(facultatif)</small></span>
-                          <textarea name="comment" maxlength="1000" rows="2" placeholder="Un mot sur la partie de ce joueur…">{{ player.comment }}</textarea>
+                          <textarea name="comment" maxlength="1000" rows="2" placeholder="Un mot sur la partie de {{ player.name }}…">{{ player.comment }}</textarea>
                         </label>
                       </fieldset>
                     {% endfor %}
@@ -197,8 +189,8 @@
                   <label class="player-field winner-field">
                     <span>Résultat du duel</span>
                     <select name="winner" required>
-                      <option value="player1"{% if edit_values.winner == "player1" %} selected{% endif %}>Joueur 1 gagne</option>
-                      <option value="player2"{% if edit_values.winner == "player2" %} selected{% endif %}>Joueur 2 gagne</option>
+                      <option value="player1"{% if edit_values.winner == "player1" %} selected{% endif %}>Claire gagne</option>
+                      <option value="player2"{% if edit_values.winner == "player2" %} selected{% endif %}>Maxence gagne</option>
                       <option value="draw"{% if edit_values.winner == "draw" %} selected{% endif %}>Égalité</option>
                     </select>
                   </label>
@@ -217,7 +209,7 @@
                       {% for player in game.players %}
                         <tr class="{% if player.result == 'win' %}winner-row{% elif player.result == 'loss' %}loss-row{% else %}draw-row{% endif %}">
                           <td class="result-cell"><span class="result-badge result-{{ player.result }}">{% if player.result == "win" %}<span aria-hidden="true">♛</span> Victoire{% elif player.result == "draw" %}Égalité{% else %}Défaite{% endif %}</span></td>
-                          <td class="player-name-cell">{{ player.name }}</td>
+                          <td class="player-name-cell">{{ player_names[loop.index0] }}</td>
                           <td class="character-cell">{{ player.character }}</td>
                           <td class="comment-cell">{% if player.comment %}{{ player.comment }}{% else %}<span class="no-comment">—</span>{% endif %}</td>
                         </tr>

@@ -1,12 +1,96 @@
 {% extends "base.html" %}
 
 {% block title %}Personnages — Villainous{% endblock %}
-{% block description %}Découvrez les personnages de Villainous.{% endblock %}
+{% block description %}Catalogue des personnages de Villainous : univers, identité et aperçu original de leur style de jeu.{% endblock %}
 {% block content %}
-  <section class="feature-page" aria-labelledby="page-title">
-    <p class="eyebrow"><span class="eyebrow-mark">✦</span> QUI SEREZ-VOUS ?</p>
-    <h1 id="page-title">Choisissez votre <em>destin.</em></h1>
-    <p class="intro">La galerie des personnages et de leurs objectifs prendra place ici. Choisissez bientôt le méchant qui écrira votre histoire.</p>
-    <span class="feature-status"><span></span> FONCTIONNALITÉ EN PRÉPARATION</span>
+  <section class="characters-page" aria-labelledby="page-title">
+    <header class="characters-heading">
+      <div>
+        <p class="eyebrow"><span class="eyebrow-mark">✦</span> LE ROYAUME DES MÉCHANTS</p>
+        <h1 id="page-title">Les <em>Personnages.</em></h1>
+        <p class="intro">Explorez les vilains, leur univers et l’approche stratégique qui donne sa couleur à chaque deck.</p>
+      </div>
+      <span class="characters-count">{{ villains|length }} FICHES</span>
+    </header>
+
+    <aside class="characters-note">
+      <span aria-hidden="true">✧</span>
+      <p>Ouvre une fiche pour lire un aperçu stratégique original. Les objectifs exacts, cartes et plateaux restent décrits dans les règles officielles de chaque boîte.</p>
+      <a href="{{ official_catalog_url }}" target="_blank" rel="noopener noreferrer">Catalogue officiel Ravensburger <span aria-hidden="true">↗</span></a>
+    </aside>
+
+    <div class="characters-toolbar">
+      <label class="character-search">
+        <span class="visually-hidden">Rechercher un personnage ou un univers</span>
+        <span aria-hidden="true">⌕</span>
+        <input id="character-search" type="search" placeholder="Rechercher un personnage, un univers, un style…" autocomplete="off">
+      </label>
+      <p class="characters-results" role="status" aria-live="polite"><strong>{{ villains|length }}</strong> personnages</p>
+    </div>
+
+    <div class="character-catalog">
+      {% for villain in villains %}
+        <details class="villain-card" data-search="{{ villain.name }} {{ villain.universe }} {{ villain.style }} {{ villain.mechanics }} {{ villain.description }}">
+          <summary class="villain-card-summary" aria-controls="villain-details-{{ loop.index }}">
+            <span class="villain-card-top">
+              <span class="villain-universe">{{ villain.universe }}</span>
+            </span>
+            <span class="villain-name">{{ villain.name }}</span>
+            <span class="villain-divider" aria-hidden="true"><span>✦</span></span>
+            <span class="villain-style-label">APPROCHE DE JEU</span>
+            <span class="villain-style">{{ villain.style }}</span>
+            <span class="villain-mechanics">
+              <span>Axes de jeu</span>
+              <span class="villain-mechanics-value">{{ villain.mechanics }}</span>
+            </span>
+            <span class="villain-expand-label"><span class="expand-closed">Développer la fiche</span><span class="expand-open">Réduire la fiche</span><span class="expand-icon" aria-hidden="true">⌄</span></span>
+          </summary>
+          <div class="villain-details" id="villain-details-{{ loop.index }}">
+            <section>
+              <h3>Lecture stratégique</h3>
+              <p>{{ villain.description }}</p>
+            </section>
+            <section>
+              <h3>Conseil de pilotage</h3>
+              <p>{{ villain.advice }}</p>
+            </section>
+            <section class="official-rules-note">
+              <h3>Objectif, cartes et plateau</h3>
+              <p>Cette fiche présente une approche générale, sans reproduire les cartes. Pour les conditions de victoire exactes, les effets de cartes et les règles de plateau, consulte la notice de la boîte correspondante.</p>
+              <a href="{{ official_catalog_url }}" target="_blank" rel="noopener noreferrer">Référence officielle Ravensburger <span aria-hidden="true">↗</span></a>
+            </section>
+          </div>
+        </details>
+      {% endfor %}
+    </div>
+    <p class="characters-no-results" hidden>Aucun personnage ne correspond à cette recherche.</p>
+
+    <footer class="characters-footer">
+      <p>Pour les objectifs exacts et le détail des cartes, reporte-toi à la notice officielle de la boîte concernée.</p>
+      <a href="{{ official_catalog_url }}" target="_blank" rel="noopener noreferrer">Consulter les produits Disney Villainous chez Ravensburger <span aria-hidden="true">↗</span></a>
+    </footer>
   </section>
+  <script>
+    const characterSearch = document.querySelector("#character-search");
+    const villainCards = Array.from(document.querySelectorAll(".villain-card"));
+    const characterResultCount = document.querySelector(".characters-results strong");
+    const noCharacterResults = document.querySelector(".characters-no-results");
+
+    const normalizeText = text => text
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLocaleLowerCase("fr");
+
+    characterSearch.addEventListener("input", () => {
+      const query = normalizeText(characterSearch.value.trim());
+      let visibleCount = 0;
+      villainCards.forEach(card => {
+        const matches = normalizeText(card.dataset.search).includes(query);
+        card.hidden = !matches;
+        if (matches) visibleCount += 1;
+      });
+      characterResultCount.textContent = visibleCount;
+      noCharacterResults.hidden = visibleCount > 0;
+    });
+  </script>
 {% endblock %}

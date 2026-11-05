@@ -12,7 +12,14 @@ from flask import (
     url_for,
 )
 
-from python_app.database import delete_game, get_game, list_games, save_game, update_game
+from python_app.database import (
+    PLAYER_NAMES,
+    delete_game,
+    get_game,
+    list_games,
+    save_game,
+    update_game,
+)
 
 scores = Blueprint("scores", __name__, url_prefix="/scores")
 
@@ -47,8 +54,8 @@ CHARACTERS = (
 )
 
 DEFAULT_PLAYERS = [
-    {"name": "", "character": "", "comment": ""},
-    {"name": "", "character": "", "comment": ""},
+    {"name": PLAYER_NAMES[0], "character": "", "comment": ""},
+    {"name": PLAYER_NAMES[1], "character": "", "comment": ""},
 ]
 GAMES_PER_PAGE = 3
 
@@ -84,6 +91,7 @@ def _render_scores(
         render_template(
             "scores.html",
             characters=CHARACTERS,
+            player_names=PLAYER_NAMES,
             errors=errors or [],
             games=games,
             total_games=total_games,
@@ -102,19 +110,18 @@ def _render_scores(
 
 
 def _parse_duel_form() -> tuple[Optional[dict[str, Any]], list[str], dict[str, Any]]:
-    names = request.form.getlist("player_name")
     characters = request.form.getlist("character")
     comments = request.form.getlist("comment")
     raw_date = request.form.get("played_on", "")
     raw_duration = request.form.get("duration_minutes", "")
     winner = request.form.get("winner", "")
     rows = [
-        {"name": name.strip(), "character": character, "comment": comment.strip()}
-        for name, character, comment in zip(names, characters, comments)
+        {"name": name, "character": character, "comment": comment.strip()}
+        for name, character, comment in zip(PLAYER_NAMES, characters, comments)
     ]
     errors: list[str] = []
 
-    if len(names) != 2 or len(characters) != 2 or len(comments) != 2:
+    if len(characters) != 2 or len(comments) != 2:
         errors.append("Un duel doit réunir exactement deux joueurs.")
 
     try:
@@ -136,10 +143,6 @@ def _parse_duel_form() -> tuple[Optional[dict[str, Any]], list[str], dict[str, A
 
     rows = (rows + DEFAULT_PLAYERS)[:2]
     for index, row in enumerate(rows, start=1):
-        if not row["name"]:
-            errors.append(f"Le nom du joueur {index} est obligatoire.")
-        if len(row["name"]) > 80:
-            errors.append(f"Le nom du joueur {index} ne peut pas dépasser 80 caractères.")
         if row["character"] not in CHARACTERS:
             errors.append(f"Choisissez un personnage valide pour le joueur {index}.")
         if len(row["comment"]) > 1000:
@@ -224,7 +227,10 @@ def edit(game_id: int) -> tuple[str, int]:
         "duration_minutes": (
             str(game["duration_minutes"]) if game["duration_minutes"] is not None else ""
         ),
-        "players": game["players"],
+        "players": [
+            {**player, "name": PLAYER_NAMES[index]}
+            for index, player in enumerate(game["players"])
+        ],
         "winner": game["winner"],
     }
     return _render_scores(edit_game_id=game_id, edit_values=edit_values)
