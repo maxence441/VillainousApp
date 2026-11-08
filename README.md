@@ -1,64 +1,71 @@
-# python-app
+# VillainousApp
 
-A Python application with a command-line greeting and a Flask landing page.
+VillainousApp is a French-language React application for recording Claire and Maxence's Villainous duels, exploring statistics, and browsing a character catalog. The frontend is built with Vite and can be hosted on GitHub Pages; Supabase Auth and Postgres provide shared, protected duel storage.
 
 ## Requirements
 
-- Python 3.9 or newer
+- Node.js 22.12 or newer and npm
+- A Supabase project for the Scores and Stats pages
 
-## Setup
+## Configure Supabase
 
-```sh
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip setuptools
-python -m pip install -e ".[test]"
-```
+1. Create a Supabase project.
+2. In **Project Settings → API**, copy the project URL and the public anon/publishable key.
+3. In **Authentication → Providers / Sign In**, disable public email sign-ups. Create accounts only for the people who should access the archives. The app deliberately has no public registration form.
+4. Open **SQL Editor** in the Supabase dashboard and run [`supabase/schema.sql`](./supabase/schema.sql).
+5. Add these repository Actions secrets for GitHub Pages builds:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
 
-## Run
+The anon key is public by design and is included in the browser bundle. Row Level Security is enabled for the `duels` table; keep public sign-ups disabled and never put a Supabase service-role key in the frontend or GitHub Pages secrets.
 
-```sh
-python-app
-python-app Ada
-```
-
-## Run the web app
+## Run locally
 
 ```sh
-python-app-web
+npm ci
+cp .env.example .env.local
 ```
 
-The scores page requires PostgreSQL. Docker Compose starts the app and its database together; use the local command only when a PostgreSQL server is already configured through `DATABASE_URL`.
+Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env.local`, then start Vite:
 
-The home page is at `/`, with feature pages at `/scores`, `/stats`, and `/personnages`.
+```sh
+npm run dev
+```
 
-The characters page provides an original, searchable overview of the 27 villains currently available in the duel selector, with a short introduction to each one's general play style. For exact victory objectives and card details, use the rules supplied with the relevant game box and the official Ravensburger catalog linked from the page.
+Run checks and create a production build:
 
-## Run with Docker Compose
+```sh
+npm test
+npm run build
+```
 
-Build the image and start the web app from the repository root:
+Scores and statistics require signing in with a Supabase account provisioned by the project administrator. The character catalog and home page work without Supabase configuration.
+
+## Deploy to GitHub Pages
+
+1. Rename the GitHub repository to `VillainousApp` (the Pages workflow uses that project URL).
+2. In the repository, open **Settings → Pages** and select **GitHub Actions** as the build and deployment source.
+3. Add the two Supabase Actions secrets listed above.
+4. Push to `main` or `master`, or manually run **Deploy VillainousApp to GitHub Pages** from **Actions**.
+
+The deployment uses hash-based routes so direct visits and page refreshes work on GitHub Pages. After the first successful workflow, GitHub Pages displays the site URL in **Settings → Pages**.
+
+## Run with Docker
+
+Docker builds the static app and serves it through Nginx; no backend or database is bundled.
+
+```sh
+cp .env.example .env
+```
+
+Add the Supabase URL and public anon key to `.env`, then build and start:
 
 ```sh
 docker compose up --build
 ```
 
-Then open <http://127.0.0.1:5001>. The pages are available at `/`, `/scores`, `/stats`, and `/personnages`. If that port is already in use, choose another host port, for example `APP_PORT=5058 docker compose up --build`. Stop the app with `Ctrl+C`, or run it in the background:
+Open <http://localhost:8080>. Stop with `Ctrl+C` or run `docker compose down`.
 
-```sh
-docker compose up --build -d
-docker compose down
-```
+## Data migration
 
-The scores page records each duel between Claire (seat 1) and Maxence (seat 2): date, duration in minutes, winner (or a draw), characters, and an optional comment for each player. Historical entries are displayed with these fixed names according to their seat. PostgreSQL runs in its own container, and its data is persisted in the `villainous_data` Docker volume, even after `docker compose down`. Existing numeric results are migrated to wins, losses, or draws when the app starts. To permanently delete the saved duels, run `docker compose down -v`.
-
-To run the CLI in the container instead:
-
-```sh
-docker compose run --rm --entrypoint python-app app Ada
-```
-
-## Test
-
-```sh
-python -m pytest
-```
+The new app reads and writes to the Supabase `duels` table. It does not automatically copy rows from the former PostgreSQL database or the previous local SQLite file. Export/import any records you still need before retiring those databases.

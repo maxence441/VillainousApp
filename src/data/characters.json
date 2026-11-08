@@ -1,0 +1,218 @@
+[
+  {
+    "name": "Maléfique",
+    "universe": "La Belle au bois dormant",
+    "style": "Étendre son influence",
+    "mechanics": "Curses · contrôle des lieux · préparation",
+    "description": "Un jeu de planification territoriale : ses maléfices prennent de l’ampleur à mesure qu’ils sont semés dans le royaume. Elle récompense les joueurs qui préparent leurs coups plutôt que de foncer tête baissée.",
+    "advice": "Choisis tes déplacements en regardant les effets que tu peux enchaîner au même tour. Une malédiction bien placée peut rendre plusieurs actions suivantes plus efficaces."
+  },
+  {
+    "name": "Jafar",
+    "universe": "Aladdin",
+    "style": "Préparer une prise de pouvoir",
+    "mechanics": "Objets clés · alliés · mise en place",
+    "description": "Jafar construit son ascension autour d’objets décisifs et de soutiens bien placés. Son parcours est progressif : il faut organiser son royaume avant de pouvoir conclure.",
+    "advice": "Fais avancer les pièces de ton plan dans un ordre cohérent et surveille les occasions de récupérer ce qui te manque. La précipitation peut laisser tes préparatifs exposés."
+  },
+  {
+    "name": "Ursula",
+    "universe": "La Petite Sirène",
+    "style": "Négocier et manœuvrer",
+    "mechanics": "Contrats · déplacement · timing",
+    "description": "La souveraine des mers préfère les arrangements aux confrontations directes. Son jeu demande de gérer ses engagements et de choisir le bon moment pour déplacer ses pièces.",
+    "advice": "Garde en tête les contraintes de déplacement et le moment où tes engagements peuvent être remplis. Prépare une sortie avant de déplacer les éléments importants."
+  },
+  {
+    "name": "Capitaine Crochet",
+    "universe": "Peter Pan",
+    "style": "Poursuivre sa cible",
+    "mechanics": "Équipage · déplacements · affrontements",
+    "description": "Crochet met en scène une chasse qui traverse son royaume. Recruter les bons soutiens et garder la pression sur sa cible donne le rythme à sa partie.",
+    "advice": "Anticipe la route de ta cible et place ton équipage là où il pourra soutenir la poursuite. Les détours coûtent du temps : chaque déplacement doit rapprocher ton plan de son dénouement."
+  },
+  {
+    "name": "Prince Jean",
+    "universe": "Robin des Bois",
+    "style": "Amasser des ressources",
+    "mechanics": "Pouvoir · économie · opportunisme",
+    "description": "Son approche consiste à faire grossir sa réserve de pouvoir et à la protéger. Il apprécie les décisions économiques patientes et les occasions de tirer profit du désordre adverse.",
+    "advice": "Évite de dépenser toute ta réserve dès qu’une action séduisante apparaît. Conserve assez de marge pour saisir une opportunité ou répondre à une menace."
+  },
+  {
+    "name": "Reine de Cœur",
+    "universe": "Alice au pays des merveilles",
+    "style": "Organiser une opération",
+    "mechanics": "Préparation · alliés · précision",
+    "description": "La Reine doit mettre en place ses moyens avant de tenter son coup. Son style est méthodique : une bonne préparation transforme une action risquée en occasion décisive.",
+    "advice": "Prépare les soutiens et les conditions de ton opération avant de la déclencher. Un tour consacré à l’organisation peut éviter de devoir recommencer après un contre."
+  },
+  {
+    "name": "La Méchante Reine",
+    "universe": "Blanche-Neige et les Sept Nains",
+    "style": "Composer une formule",
+    "mechanics": "Ingrédients · transformations · planification",
+    "description": "Elle assemble progressivement les éléments nécessaires à ses machinations. Le plaisir de ce deck vient de la coordination de plusieurs étapes plutôt que d’une puissance immédiate.",
+    "advice": "Repère les éléments encore absents de ta préparation et organise leur collecte. Garde un œil sur les cartes qui peuvent ralentir ou défaire une étape déjà accomplie."
+  },
+  {
+    "name": "Hadès",
+    "universe": "Hercule",
+    "style": "Faire avancer ses forces",
+    "mechanics": "Alliés puissants · mouvement · coordination",
+    "description": "Hadès s’appuie sur des alliés imposants qu’il faut faire progresser dans son royaume. Il demande de synchroniser les déplacements et les renforts pour ouvrir la voie.",
+    "advice": "Fais avancer tes forces ensemble plutôt que de disperser tes efforts. Avant un mouvement important, vérifie que tes alliés pourront encore se soutenir au tour suivant."
+  },
+  {
+    "name": "Docteur Facilier",
+    "universe": "La Princesse et la Grenouille",
+    "style": "Manipuler le hasard",
+    "mechanics": "Fortune · pioche · prise de risque",
+    "description": "Facilier joue avec l’incertitude et les coups de chance. Sa partie tourne autour de la gestion d’une réserve de cartes particulière et du choix entre prudence et audace.",
+    "advice": "Évalue ce que tu risques de perdre avant de tenter une action hasardeuse. Quand la chance est de ton côté, transforme le gain en avantage concret au lieu de repousser ta décision."
+  },
+  {
+    "name": "Scar",
+    "universe": "Le Roi Lion",
+    "style": "Renverser l’ordre établi",
+    "mechanics": "Conflits · héros · accumulation",
+    "description": "Scar prospère dans le conflit et cherche à faire basculer l’équilibre de son royaume. Il faut transformer les affrontements en progrès durable sans laisser les menaces s’accumuler.",
+    "advice": "Ne déclenche pas un affrontement sans savoir ce qu’il t’apporte ensuite. Contrôle les menaces qui s’accumulent afin qu’elles ne bloquent pas tes actions futures."
+  },
+  {
+    "name": "Yzma",
+    "universe": "Kuzco, l’empereur mégalo",
+    "style": "Retrouver une cible",
+    "mechanics": "Recherche · informations · serviteurs",
+    "description": "Yzma et Kronk avancent par tentatives successives pour retrouver leur cible. Son deck met l’accent sur la recherche, la circulation de l’information et les détours comiques.",
+    "advice": "Utilise les indices et les possibilités de recherche pour réduire l’incertitude. Prévois que certaines tentatives prennent plusieurs tours et profite des actions intermédiaires."
+  },
+  {
+    "name": "Ratigan",
+    "universe": "Basil, détective privé",
+    "style": "Prévoir un plan de secours",
+    "mechanics": "Invention · stratégie à deux voies · adaptation",
+    "description": "Ratigan prépare une opération ambitieuse tout en gardant une solution de repli. C’est un deck d’anticipation où savoir changer de plan fait partie de la stratégie.",
+    "advice": "Suis la progression de ton plan principal, mais ne néglige pas les conditions de repli. Savoir quand changer de voie est plus précieux que s’entêter dans une ligne bloquée."
+  },
+  {
+    "name": "Cruella d’Enfer",
+    "universe": "Les 101 Dalmatiens",
+    "style": "Collecter et déplacer",
+    "mechanics": "Collection · transport · logistique",
+    "description": "Cruella transforme son royaume en chaîne de collecte et de transport. Il faut faire circuler ses ressources efficacement et protéger une opération qui se construit sur plusieurs tours.",
+    "advice": "Pense à la chaîne complète : collecte, déplacement, puis sécurisation. Évite de laisser les éléments importants immobilisés au mauvais endroit."
+  },
+  {
+    "name": "Pat Hibulaire",
+    "universe": "Univers Mickey",
+    "style": "S’adapter à des objectifs changeants",
+    "mechanics": "Défis · choix · polyvalence",
+    "description": "Pat est un touche-à-tout : son parcours l’amène à poursuivre différents défis. Il convient à celles et ceux qui aiment changer de priorité et saisir les occasions qui se présentent.",
+    "advice": "Compare régulièrement les défis possibles à l’état actuel de ta main et de ton royaume. Rester flexible est utile, mais changer d’objectif trop souvent disperse les efforts."
+  },
+  {
+    "name": "Mère Gothel",
+    "universe": "Raiponce",
+    "style": "Maintenir son emprise",
+    "mechanics": "Confiance · proximité · contrôle",
+    "description": "Son plan repose sur une relation qu’elle doit garder sous contrôle. La proximité de sa protégée est à la fois un avantage et une contrainte à gérer tout au long de la partie.",
+    "advice": "Surveille l’évolution de la relation au fil des tours : tes actions peuvent rapprocher ton plan de son terme ou le fragiliser. Protège les éléments qui maintiennent l’équilibre."
+  },
+  {
+    "name": "Gaston",
+    "universe": "La Belle et la Bête",
+    "style": "Mobiliser ses partisans",
+    "mechanics": "Alliés · obstacles · confrontation",
+    "description": "Gaston transforme son assurance et le soutien de ses admirateurs en force d’action. Son jeu alterne entre préparation de son groupe et résolution d’obstacles.",
+    "advice": "Construis une présence suffisante avant de chercher à franchir un obstacle. Garde assez de ressources pour que ton groupe puisse encaisser les réponses adverses."
+  },
+  {
+    "name": "Lady Trémaine",
+    "universe": "Cendrillon",
+    "style": "Orchestrer une intrigue familiale",
+    "mechanics": "Personnages · objets · séquencement",
+    "description": "Lady Trémaine organise les pièces de son foyer comme les étapes d’une intrigue. L’ordre des actions compte : elle récompense une planification attentive et la bonne combinaison de personnages.",
+    "advice": "Identifie les étapes qui dépendent les unes des autres et évite de jouer tes ressources clés trop tôt. Une séquence bien préparée vaut mieux qu’une accumulation désordonnée."
+  },
+  {
+    "name": "Le Seigneur des Ténèbres",
+    "universe": "Taram et le Chaudron magique",
+    "style": "Mettre en marche une force obscure",
+    "mechanics": "Artefact · armée · progression",
+    "description": "Il développe une menace grandissante autour d’un artefact central. Son deck mise sur la montée en puissance et sur le contrôle de l’avancée de ses forces.",
+    "advice": "Fais progresser tes forces sans perdre de vue l’élément central de ton plan. Un développement régulier rend ta stratégie moins vulnérable qu’un grand pari tardif."
+  },
+  {
+    "name": "Oogie Boogie",
+    "universe": "L’Étrange Noël de monsieur Jack",
+    "style": "Tenter sa chance",
+    "mechanics": "Dés · hasard · récompenses",
+    "description": "Oogie fait de l’incertitude un outil de jeu. Les dés peuvent accélérer son plan ou le compliquer : le joueur doit décider quand accepter le risque et quand sécuriser ses gains.",
+    "advice": "Avant chaque lancer, décide ce que tu es prêt à risquer et ce que tu veux obtenir. Les choix autour du hasard comptent autant que le résultat lui-même."
+  },
+  {
+    "name": "Chernabog",
+    "universe": "Fantasia",
+    "style": "Bâtir une puissance monumentale",
+    "mechanics": "Créatures · investissement · montée en puissance",
+    "description": "Chernabog commence par installer une présence imposante et faire grandir ses forces. Son rythme est celui d’une préparation massive qui finit par peser sur tout le royaume.",
+    "advice": "Investis tôt dans une base solide et choisis soigneusement les moments où tu développes tes forces. Une présence large est puissante, mais demande de protéger plusieurs points à la fois."
+  },
+  {
+    "name": "Roi Candy",
+    "universe": "Les Mondes de Ralph",
+    "style": "Façonner une course",
+    "mechanics": "Piste · mouvement · course aux positions",
+    "description": "Le Roi Candy transforme la progression dans son royaume en course stratégique. Les déplacements et le contrôle des positions sont au cœur de son plan.",
+    "advice": "Observe les positions avant de déplacer tes pièces : une avancée utile maintenant peut ouvrir une meilleure suite plus tard. Garde une option pour reprendre l’initiative si la course ralentit."
+  },
+  {
+    "name": "Syndrome",
+    "universe": "Les Indestructibles",
+    "style": "Construire une machine de domination",
+    "mechanics": "Technologie · préparation · confrontation",
+    "description": "Syndrome développe ses moyens technologiques avant de les mettre à l’épreuve. Il faut investir dans son dispositif et choisir le moment où le déployer.",
+    "advice": "Ne confonds pas préparation et inertie : chaque investissement devrait servir une étape identifiable. Déploie tes moyens quand ils peuvent créer un avantage difficile à interrompre."
+  },
+  {
+    "name": "Lotso",
+    "universe": "Toy Story 3",
+    "style": "Prendre le contrôle d’un groupe",
+    "mechanics": "Jouets · influence · organisation",
+    "description": "Lotso impose son autorité en organisant les jouets et les lieux sous sa coupe. Son style valorise la gestion d’un réseau de soutiens et le contrôle du terrain.",
+    "advice": "Consolide les lieux et les soutiens qui rendent ton réseau efficace. Si tu étends ton influence trop vite, tu risques de ne pas pouvoir maintenir partout le contrôle."
+  },
+  {
+    "name": "Madame Mim",
+    "universe": "Merlin l’Enchanteur",
+    "style": "Déstabiliser par la magie",
+    "mechanics": "Transformations · duel · adaptation",
+    "description": "Madame Mim préfère les changements de forme et les retournements à une progression linéaire. Son affrontement magique invite à s’adapter à la situation du moment.",
+    "advice": "Laisse la situation guider tes transformations : conserve des options plutôt que de verrouiller trop tôt une seule stratégie. Le bon changement de rythme peut retourner un duel."
+  },
+  {
+    "name": "Davy Jones",
+    "universe": "Pirates des Caraïbes",
+    "style": "Régner sur les mers",
+    "mechanics": "Équipage · navigation · pression",
+    "description": "Davy Jones étend son influence maritime à l’aide de son équipage. Son jeu est axé sur la circulation entre les lieux, la présence navale et la pression exercée sur ses adversaires.",
+    "advice": "Gère tes déplacements comme une route, pas comme des actions isolées. Une présence bien placée peut à la fois soutenir ton équipage et gêner les plans adverses."
+  },
+  {
+    "name": "Tamatoa",
+    "universe": "Vaiana",
+    "style": "Amasser des trésors",
+    "mechanics": "Objets · collecte · effets combinés",
+    "description": "Tamatoa accumule des objets brillants et cherche à tirer parti de leur présence. C’est un deck de collection où la valeur vient de la combinaison et du bon usage des trouvailles.",
+    "advice": "Pense aux synergies entre objets plutôt qu’à leur valeur individuelle. Prépare leur arrivée et évite de laisser une collection utile sans protection."
+  },
+  {
+    "name": "Sœurs Sanderson",
+    "universe": "Hocus Pocus",
+    "style": "Coordonner un trio",
+    "mechanics": "Personnages · préparation · synergies",
+    "description": "Les trois sœurs gagnent à agir de concert. Le deck met en scène la coordination de leurs rôles et la préparation d’un rituel, avec une progression qui dépend de leur bonne organisation.",
+    "advice": "Coordonne les rôles du trio et prépare les étapes dans un ordre qui évite les temps morts. Si une sœur devient indisponible, adapte ton plan au lieu de poursuivre la même séquence."
+  }
+]

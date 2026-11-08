@@ -1,27 +1,11 @@
+name: villainousapp
+
 services:
   app:
-    build: .
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-villainous}:${POSTGRES_PASSWORD:-villainous}@db:5432/${POSTGRES_DB:-villainous}
+    build:
+      context: .
+      args:
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:-}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY:-}
     ports:
-      - "${APP_PORT:-5001}:5000"
-    depends_on:
-      db:
-        condition: service_healthy
-
-  db:
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-villainous}
-      POSTGRES_USER: ${POSTGRES_USER:-villainous}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-villainous}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - villainous_data:/var/lib/postgresql/data
-
-volumes:
-  villainous_data:
+      - "${APP_PORT:-8080}:80"

@@ -1,17 +1,17 @@
-FROM python:3.12-slim
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+FROM node:22-alpine AS build
 
 WORKDIR /app
-
-COPY pyproject.toml README.md ./
+ARG VITE_SUPABASE_URL
+ARG VITE_SUPABASE_ANON_KEY
+ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
+    VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY index.html tsconfig.json vite.config.ts ./
 COPY src/ ./src/
+RUN npm run build
 
-RUN python -m pip install --no-cache-dir .
-
-USER 10001:10001
-
-EXPOSE 5000
-
-ENTRYPOINT ["python-app-web"]
+FROM nginx:stable-alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist/ /usr/share/nginx/html/
+EXPOSE 80

@@ -1,7 +1,8 @@
 # Project Guidance
 
-- Support Python 3.9 and newer.
-- Keep application code in `src/python_app/` and tests in `tests/`.
-- Keep runtime dependencies minimal; pytest is an optional test dependency.
-- Run `python -m pytest` after changing application behavior.
-- Preserve the `python-app` console command defined in `pyproject.toml`.
+- Build the frontend with Vite, React, and TypeScript.
+- Keep application code in `src/`.
+- Store shared duel data in Supabase and enforce access through Row Level Security.
+- Do not place Supabase service-role credentials in frontend code or build artifacts.
+- Run `npm test` and `npm run build` after changing application behavior.
+- Keep the Docker deployment as a static Nginx container.
